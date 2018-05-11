@@ -3,18 +3,18 @@
 #include <WiFiUdp.h>
 #include <ESP8266WebServer.h>
 ESP8266WebServer server(80);
-IPAddress ip(10, 0, 0, 239); //comment out if static //fix this
-IPAddress gateway(10, 0, 0, 138);
-IPAddress subnet(255, 255, 255, 0);
+//IPAddress ip(10, 0, 0, 239); //comment out if static //fix this
+//IPAddress gateway(10, 0, 0, 138);
+//IPAddress subnet(255, 255, 255, 0);
 //char ssid[] = "Oliver's iPhone";  //  your network SSID (name)
 //char pass[] = "kass474kass474";       // your network password
 const char* ssid = "Telstra00F027";
 const char* pass =  "yrtqbgr9fann";
 int lampState = 0;
-int alarmSet = 1;
+int alarmSet = 0;
 int alarmHour = 6;
 int alarmMin = 0;
-
+int timezone=10; //make 11 for Daylight saving. +10 for sydney etc
 
 unsigned int localPort = 2390;      // local port to listen for UDP packets
 /* Don't hardwire the IP address or we won't get the benefits of the pool.
@@ -44,11 +44,11 @@ WiFiUDP udp;
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 //
 //Clock Setup
-//#include "TM1637.h"
-////Pins for TM1637
-//#define CLK 3//8
-//#define DIO 4//was9
-//TM1637 tm1637(CLK, DIO);
+#include "TM1637.h"
+//Pins for TM1637
+#define CLK 3//8
+#define DIO 4//was9
+TM1637 tm1637(CLK, DIO);
 
 //RTC Setup
 #include <Wire.h>
@@ -84,11 +84,11 @@ void partyMode() {
   while (digitalRead(resetButton) == LOW) {
     //set clock
     //we're gunna party like it's;
-//    tm1637.point(POINT_OFF);
-//    tm1637.display(0, 1);
-//    tm1637.display(1, 9);
-//    tm1637.display(2, 9);
-//    tm1637.display(3, 9);
+    //    tm1637.point(POINT_OFF);
+    //    tm1637.display(0, 1);
+    //    tm1637.display(1, 9);
+    //    tm1637.display(2, 9);
+    //    tm1637.display(3, 9);
     chase(pixels.Color(255, 0, 0)); // Red
     chase(pixels.Color(0, 255, 0)); // Green
     chase(pixels.Color(0, 0, 255)); // Blue
@@ -97,7 +97,7 @@ void partyMode() {
 void lightOn() {
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-    Serial.println(i);
+    //Serial.println(i);
     pixels.show();
   }
   lampState = 1;
@@ -140,27 +140,28 @@ void setGreen() {
   }
 }
 void set1() {//10
-  Serial.println("45 minutes to go");
+  
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(255, 5, 0));
     pixels.show();
   }
 }
 void set2() {//20
-  Serial.println("30 minutes to go");
+  pixels.setBrightness(100);
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(255, 10, 0));
     pixels.show();
   }
 }
 void set3() {//30
-  Serial.println("15 minutes to go");
+  pixels.setBrightness(200);
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(255, 128, 0));
     pixels.show();
   }
 }
 void set4() {//40
+  pixels.setBrightness(BRIGHTNESS);
   Serial.println("Wake up");
   buzzerOn = 1;
   for (int i = 0; i < NUMPIXELS; i++) {
@@ -168,20 +169,20 @@ void set4() {//40
     pixels.show();
   }
 }
-//void setClockDisplay() {
-//  if (decPoint == 0) {
-//    tm1637.point(POINT_OFF);
-//    decPoint = 1;
-//  } else {
-//    tm1637.point(POINT_ON);
-//    decPoint = 0;
-//  }
-//  tm1637.display(0, hh / 10);  // hour
-//  tm1637.display(1, hh % 10);
-//  tm1637.display(2, mm / 10); // minutes
-//  tm1637.display(3, mm % 10);
-//  delay(500);
-//}
+void setClockDisplay() {
+  if (decPoint == 0) {
+    tm1637.point(POINT_OFF);
+    decPoint = 1;
+  } else {
+    tm1637.point(POINT_ON);
+    decPoint = 0;
+  }
+  tm1637.display(0, hh / 10);  // hour
+  tm1637.display(1, hh % 10);
+  tm1637.display(2, mm / 10); // minutes
+  tm1637.display(3, mm % 10);
+  delay(500);
+}
 unsigned long sendNTPpacket(IPAddress& address) {
   Serial.println("sending NTP packet...");
   // set all bytes in the buffer to 0
@@ -241,16 +242,16 @@ void getTime() {
     unsigned long epoch = secsSince1900 - seventyYears;
     // print Unix time:
     Serial.println(epoch);
-//utc offset...
-//set this bit and ntp
-//setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
-epoch=epoch+(3600*10);
+    //utc offset...
+    //set this bit and ntp
+    //setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
+    epoch = epoch + (3600 * timezone); //sets the UTC timezone offset
 
-int cHour=((epoch  % 86400L) / 3600);
-int cMin=((epoch  % 3600) / 60);
-int cSec=(epoch % 60);
-setTime(cHour,cMin,cSec,1,1,11);
-//adjusttime
+    int cHour = ((epoch  % 86400L) / 3600);
+    int cMin = ((epoch  % 3600) / 60);
+    int cSec = (epoch % 60);
+    setTime(cHour, cMin, cSec, 1, 1, 11);
+    //adjusttime
 
     // print the hour, minute and second:
     Serial.print("The UTC time is ");       // UTC is the time at Greenwich Meridian (GMT)
@@ -268,8 +269,8 @@ setTime(cHour,cMin,cSec,1,1,11);
     }
     Serial.println(epoch % 60); // print the second
   }
-  // wait ten seconds before asking for the time again
-  delay(10000);
+  
+  delay(5000);
 }
 void handleStatus() {
 
@@ -374,42 +375,45 @@ void handleSet() {
   message += "1 }";
   server.send(200, "text/plain", message );
 }
-void Repeats(){
-  Serial.println("15 second timer");         
+void Repeats() {
+  Serial.println("15 second timer");
 }
 void setAlarm() {
 
-  //remove old alarms
-   //Alarm.free(id);
-//AlarmID_t aTimer = Alarm.timerRepeat(10, RepeatTest);
-//Alarm.disable(aTimer);
-//Alarm.free(aTimer);
 
-
-   //give each alarm and id, then disable/free
+  //Alarm.free(id);
+  //AlarmID_t aTimer = Alarm.timerRepeat(10, RepeatTest);
+  //Alarm.disable(aTimer);
+  //Alarm.free(aTimer);
+  //give each alarm and id, then disable/free
   //Set the alarms
   Serial.println("Alarms set");//message +=alarmHour;
-  Alarm.alarmRepeat(alarmHour - 1, 0, 0, setRed); //max of 5 alarms
-  Alarm.alarmRepeat(alarmHour - 1, 15, 0, set1);
-  Alarm.alarmRepeat(alarmHour - 1, 30, 00, set2);
-  Alarm.alarmRepeat(alarmHour - 1, 45, 00, set3);
-  Alarm.alarmRepeat(alarmHour , 0, 0, set4);
+  //  Alarm.alarmRepeat(alarmHour - 1, 0, 0, setRed); //max of 5 alarms
+  //  Alarm.alarmRepeat(alarmHour - 1, 15, 0, set1);
+  //  Alarm.alarmRepeat(alarmHour - 1, 30, 00, set2);
+  //  Alarm.alarmRepeat(alarmHour - 1, 45, 00, set3);
+  //  Alarm.alarmRepeat(alarmHour , 0, 0, set4);
+
+  //final time alarm
+  Alarm.alarmOnce(alarmHour - 2 , alarmMin, 0, set2);
+  Alarm.alarmOnce(alarmHour - 1 , alarmMin, 0, set3);
+  Alarm.alarmOnce(alarmHour , alarmMin, 0, set4);
   Serial.print ("Alarm Set for: ");
   Serial.print(alarmHour);
   Serial.print(":");
   Serial.println(alarmMin);
-
+  alarmSet = 1;
   //test
-  Alarm.timerRepeat(15, Repeats); 
+  //AlarmID_t aTimer4 = Alarm.timerRepeat(15, Repeats);
 }
 void setup() {
 
-//?6
+  //?6
   pixels.setBrightness(BRIGHTNESS);
   pixels.begin(); // This initializes the NeoPixel library.
   //pinMode(piezoPin, OUTPUT);
-  //tm1637.init();
-  //tm1637.set(5);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7;
+  tm1637.init();
+  tm1637.set(5);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7;
   Serial.begin(115200);
   Serial.println();
   Serial.println();
@@ -443,7 +447,7 @@ void setup() {
   //  // automatic adjust, this will set from the timestamp of the sketch compile
   //  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   //  DateTime now = rtc.now();
-   // setTime(now.hour(), now.minute(), now.second(), now.month(), now.day(), now.year());
+  // setTime(now.hour(), now.minute(), now.second(), now.month(), now.day(), now.year());
   //setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
 
   pinMode(resetButton, INPUT);
@@ -459,29 +463,25 @@ void setup() {
 
   lightOff();
   getTime();
-  setAlarm();
-  //Alarm.timerRepeat(15, Repeats);  
+  //setAlarm();
+  //Alarm.timerRepeat(15, Repeats);
   //party mode. enter test circuit. Once you have started, press the rest button to revert to noprmal mode
   //partyMode();
   //need to delete the alarms
 }
-void digitalClockDisplay()
-{
+void digitalClockDisplay(){
   // digital clock display of the time
   Serial.print(hour());
   printDigits(minute());
   printDigits(second());
-  Serial.println(); 
+  Serial.println();
 }
-
-void printDigits(int digits)
-{
+void printDigits(int digits){
   Serial.print(":");
-  if(digits < 10)
+  if (digits < 10)
     Serial.print('0');
   Serial.print(digits);
 }
-
 void loop() {
   //  DateTime now = rtc.now();
   //  hh = now.hour(), DEC;
@@ -508,12 +508,12 @@ void loop() {
   //Serial.println(WiFi.localIP());
   Alarm.delay(1);
   server.handleClient();
-digitalClockDisplay();
-delay(1000); 
+  digitalClockDisplay();
+  delay(1000);
   //cxlock test
-//    tm1637.point(POINT_OFF);
-//    tm1637.display(0, 1);
-//    tm1637.display(1, 9);
-//    tm1637.display(2, 9);
-//    tm1637.display(3, 9);
+  //    tm1637.point(POINT_OFF);
+  //    tm1637.display(0, 1);
+  //    tm1637.display(1, 9);
+  //    tm1637.display(2, 9);
+  //    tm1637.display(3, 9);
 }
