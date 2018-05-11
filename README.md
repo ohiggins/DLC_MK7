@@ -2,13 +2,13 @@
 ## Todo
 * ~~Set alarms to 1 hour intervals to make the trigger math more simple~~
 * ~~Remove alarms trigger on boot~~
-* Add var for alarm set and return with JSON
-* Add var for offset of timezone and note about daylight saving.
+* ~~Add var for alarm set and return with JSON~~
+* A~~dd var for offset of timezone and note about daylight saving.~~
 * Get Hardware working on pins
 * Map pin assignments
-* add brightness control to phases
+* ~~add brightness control to phases~~
 * Send ip to the 7 seg display
-* hh and mm need to updated fo the clock to function (7seg)
+* ~~hh and mm need to updated fo the clock to function (7seg)~~
 
 
 ## Version
