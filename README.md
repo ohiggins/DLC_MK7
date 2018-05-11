@@ -1,12 +1,14 @@
 # Daylight Clock MK7
 ## Todo
-* Set alarms to 1 hour intervals to make the trigger math more simple
-* Remove alarms trigger on boot
+* ~~Set alarms to 1 hour intervals to make the trigger math more simple~~
+* ~~Remove alarms trigger on boot~~
 * Add var for alarm set and return with JSON
 * Add var for offset of timezone and note about daylight saving.
 * Get Hardware working on pins
 * Map pin assignments
 * add brightness control to phases
+* Send ip to the 7 seg display
+* hh and mm need to updated fo the clock to function (7seg)
 
 
 ## Version
@@ -24,7 +26,11 @@
 * Added brightness to alarms 
 * Change delay from 10 to 5 seconds after the NTP server has been working
 
+## 018
+* Clean commented code up so its more readable.
 
+## 019
+* Hardware build
 
 ## Known Issues
 1. Alarms need to be set each time and are not reccuring. This is possible but the alrms need to be reset after each change.
