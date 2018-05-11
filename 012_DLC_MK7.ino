@@ -3,31 +3,19 @@
 #include <WiFiUdp.h>
 #include <ESP8266WebServer.h>
 ESP8266WebServer server(80);
-//IPAddress ip(10, 0, 0, 239); //comment out if static //fix this
-//IPAddress gateway(10, 0, 0, 138);
-//IPAddress subnet(255, 255, 255, 0);
-//char ssid[] = "Oliver's iPhone";  //  your network SSID (name)
-//char pass[] = "kass474kass474";       // your network password
 const char* ssid = "Telstra00F027";
 const char* pass =  "yrtqbgr9fann";
 int lampState = 0;
 int alarmSet = 0;
 int alarmHour = 6;
 int alarmMin = 0;
-int timezone=10; //make 11 for Daylight saving. +10 for sydney etc
+int timezone = 10; //make 11 for Daylight saving. +10 for sydney etc
 
-unsigned int localPort = 2390;      // local port to listen for UDP packets
-/* Don't hardwire the IP address or we won't get the benefits of the pool.
-    Lookup the IP address for the host name instead */
-//IPAddress timeServer(129, 6, 15, 28); // time.nist.gov NTP server
+unsigned int localPort = 2390;// local port to listen for UDP packets
 IPAddress timeServerIP; // time.nist.gov NTP server address
 const char* ntpServerName = "time.nist.gov";
-
 const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
-
 byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
-
-// A UDP instance to let us send and receive packets over UDP
 WiFiUDP udp;
 
 
@@ -51,7 +39,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 TM1637 tm1637(CLK, DIO);
 
 //RTC Setup
-#include <Wire.h>
+//#include <Wire.h>
 //#include "RTClib.h"
 //RTC_DS3231 rtc;
 int hh, mm;
@@ -60,15 +48,11 @@ int decPoint = 0;
 //Alarms Setup
 #include <TimeLib.h>
 #include <TimeAlarms.h>
+
 //Pins setup
 int resetButton = 12;
 int piezoPin = 10;
 int buzzerOn = 0;
-
-//Alarm Time, whole our only, 24 hour time.
-//int alarmHr = 06;//06= 6am, 21=9pm
-
-//Functions for use in the main sketch
 
 //Chase function, used in partyMode
 static void chase(uint32_t c) {
@@ -84,11 +68,11 @@ void partyMode() {
   while (digitalRead(resetButton) == LOW) {
     //set clock
     //we're gunna party like it's;
-    //    tm1637.point(POINT_OFF);
-    //    tm1637.display(0, 1);
-    //    tm1637.display(1, 9);
-    //    tm1637.display(2, 9);
-    //    tm1637.display(3, 9);
+    tm1637.point(POINT_OFF);
+    tm1637.display(0, 1);
+    tm1637.display(1, 9);
+    tm1637.display(2, 9);
+    tm1637.display(3, 9);
     chase(pixels.Color(255, 0, 0)); // Red
     chase(pixels.Color(0, 255, 0)); // Green
     chase(pixels.Color(0, 0, 255)); // Blue
@@ -140,7 +124,7 @@ void setGreen() {
   }
 }
 void set1() {//10
-  
+
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(255, 5, 0));
     pixels.show();
@@ -269,7 +253,7 @@ void getTime() {
     }
     Serial.println(epoch % 60); // print the second
   }
-  
+
   delay(5000);
 }
 void handleStatus() {
@@ -279,7 +263,8 @@ void handleStatus() {
   message += lampState;
   message += ", ";
   message += "\"alarmSet\": ";
-  message += "1, ";
+  message += alarmSet;
+  message += ", ";
   message += "\"alarmHour\": ";
   message += alarmHour;
   message += ", ";
@@ -287,15 +272,6 @@ void handleStatus() {
   message += alarmMin;
   message += " }";
 
-  //  String message = "[{\"NAME\":\"";
-  //  message += "";
-  //  message += "\",";
-  //  message += "\"IP\":\"";
-  //  message += WiFi.localIP().toString();
-  //  message += "\"";
-  //  message += "}]";
-  //String message = "{ "\"lampOn"\: 0, "\alarmSet": 1, "alarmHour": 22, "alarmMin": 30
-  //};
   server.send(200, "text/plain", message );
 }
 void handleLamp() {
@@ -310,30 +286,6 @@ void handleLamp() {
   } else {
     lightOn();
   }
-
-  //Serial.println(lampStatus);
-
-  //  Serial.print("Number of args received: ");
-  //  Serial.println(server.args());            //Get number of parameters
-  //
-  //
-  //  for (int i = 0; i < server.args(); i++) {
-  //    Serial.print(server.argName(i));
-  //    Serial.println(server.arg(i));
-  //  }
-
-
-  //  StaticJsonBuffer<200> jsonBuffer;
-  //  JsonObject& root = jsonBuffer.parseObject(server.arg("plain"));
-  //  if (!root.success()) {
-  //    Serial.println("parseObject() failed");
-  //
-  //  }
-  //  Serial.println(sizeof(root));
-  //  int lampStatus = root["lampOn"];
-  //  Serial.println(lampStatus);
-  //  Serial.println("lampon");
-
   String message;
   message += "{ \"success\": ";
   message += "1 }";
@@ -347,29 +299,6 @@ void handleSet() {
   alarmHour = root["alarmHour"];
   alarmMin = root["alarmMin"];
   setAlarm();
-
-
-  //  Serial.print("Number of args received: ");
-  //  Serial.println(server.args());            //Get number of parameters
-  //
-  //
-  //  for (int i = 0; i < server.args(); i++) {
-  //    Serial.print(server.argName(i));
-  //    Serial.println(server.arg(i));
-  //  }
-
-  //
-  //
-  //  //im the client.
-  //  StaticJsonBuffer<200> jsonBuffer;
-  //  JsonObject& root = jsonBuffer.parseObject(server.arg("plain"));
-  //  if (!root.success()) {
-  //    Serial.println("parseObject() failed");
-  //
-  //  }
-  //  Serial.println("SetAlarm");
-  //  Serial.println(sizeof(root));
-
   String message;
   message += "{ \"success\": ";
   message += "1 }";
@@ -380,19 +309,9 @@ void Repeats() {
 }
 void setAlarm() {
 
-
-  //Alarm.free(id);
-  //AlarmID_t aTimer = Alarm.timerRepeat(10, RepeatTest);
-  //Alarm.disable(aTimer);
-  //Alarm.free(aTimer);
-  //give each alarm and id, then disable/free
   //Set the alarms
   Serial.println("Alarms set");//message +=alarmHour;
-  //  Alarm.alarmRepeat(alarmHour - 1, 0, 0, setRed); //max of 5 alarms
-  //  Alarm.alarmRepeat(alarmHour - 1, 15, 0, set1);
-  //  Alarm.alarmRepeat(alarmHour - 1, 30, 00, set2);
-  //  Alarm.alarmRepeat(alarmHour - 1, 45, 00, set3);
-  //  Alarm.alarmRepeat(alarmHour , 0, 0, set4);
+
 
   //final time alarm
   Alarm.alarmOnce(alarmHour - 2 , alarmMin, 0, set2);
@@ -403,8 +322,6 @@ void setAlarm() {
   Serial.print(":");
   Serial.println(alarmMin);
   alarmSet = 1;
-  //test
-  //AlarmID_t aTimer4 = Alarm.timerRepeat(15, Repeats);
 }
 void setup() {
 
@@ -438,18 +355,6 @@ void setup() {
   Serial.print("Local port: ");
   Serial.println(udp.localPort());
 
-
-
-  //rtc.begin();
-  //  // manual adjust
-  //  // January 21, 2014 at 3am you would call:
-  //  // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-  //  // automatic adjust, this will set from the timestamp of the sketch compile
-  //  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  //  DateTime now = rtc.now();
-  // setTime(now.hour(), now.minute(), now.second(), now.month(), now.day(), now.year());
-  //setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
-
   pinMode(resetButton, INPUT);
 
   //server
@@ -459,33 +364,30 @@ void setup() {
   server.begin(); //Start the server
   //gettime
 
-  //setalarm
-
   lightOff();
   getTime();
-  //setAlarm();
-  //Alarm.timerRepeat(15, Repeats);
+
   //party mode. enter test circuit. Once you have started, press the rest button to revert to noprmal mode
   //partyMode();
-  //need to delete the alarms
+
 }
-void digitalClockDisplay(){
+void digitalClockDisplay() {
   // digital clock display of the time
   Serial.print(hour());
   printDigits(minute());
   printDigits(second());
   Serial.println();
 }
-void printDigits(int digits){
+void printDigits(int digits) {
   Serial.print(":");
   if (digits < 10)
     Serial.print('0');
   Serial.print(digits);
 }
 void loop() {
-  //  DateTime now = rtc.now();
-  //  hh = now.hour(), DEC;
-  //  mm = now.minute(), DEC;
+
+  hh = hour(), DEC;
+  mm = minute(), DEC;
   //  if (buzzerOn == 1) {
   //    digitalWrite(piezoPin, HIGH);
   //    delay(100);
@@ -508,12 +410,8 @@ void loop() {
   //Serial.println(WiFi.localIP());
   Alarm.delay(1);
   server.handleClient();
-  digitalClockDisplay();
+  //comment uncomment if you need the clock displayed on the serial monitor
+  //digitalClockDisplay();
   delay(1000);
-  //cxlock test
-  //    tm1637.point(POINT_OFF);
-  //    tm1637.display(0, 1);
-  //    tm1637.display(1, 9);
-  //    tm1637.display(2, 9);
-  //    tm1637.display(3, 9);
+
 }
