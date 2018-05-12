@@ -38,10 +38,6 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 #define DIO D6//was9
 TM1637 tm1637(CLK, DIO);
 
-//RTC Setup
-//#include <Wire.h>
-//#include "RTClib.h"
-//RTC_DS3231 rtc;
 int hh, mm;
 int decPoint = 0;
 
@@ -78,7 +74,7 @@ void partyMode() {
                 chase(pixels.Color(0, 255, 0)); // Green
                 chase(pixels.Color(0, 0, 255)); // Blue
         }
-        Serial.println("Party is over");
+        
 }
 void lightOn() {
         for (int i = 0; i < NUMPIXELS; i++) {
@@ -268,7 +264,7 @@ void getTime() {
                 Serial.println(epoch % 60); // print the second
         }
 
-        delay(5000);
+        delay(500);
 }
 void handleStatus() {
 
@@ -399,7 +395,7 @@ void printDigits(int digits) {
         Serial.print(digits);
 }
 void loop() {
-digitalWrite(piezoPin, HIGH);
+
         hh = hour(), DEC;
         mm = minute(), DEC;
           if (buzzerOn == 1) {
