@@ -1,0 +1,33 @@
+/* Custom Stylesheet */
+
+
+a {
+	color: #00a6db;
+}
+
+.timepicker-icon:hover {
+  cursor: pointer;
+}
+
+.progress {
+  position: absolute;
+  top: 56px;
+}
+@media only screen and (max-width: 600px) {
+	.progress {
+	  top: 49px;
+	}
+}
+/* Push footer to bottom of page */
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+
+      

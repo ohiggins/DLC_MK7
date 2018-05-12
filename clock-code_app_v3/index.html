@@ -1,0 +1,103 @@
+<!-- Framework: Materialize (https://materializecss.com) -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>DIYODE Magazine - Alarm</title>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>    
+  </head>
+
+  <body>
+
+    <!-- Nav bar -->
+    <nav class="grey darken-4" role="navigation">
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo">
+          Alarm clock
+        </a>
+        
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+      <div class="progress" style="display: none;">
+        <div class="indeterminate"></div>     
+      </div>
+      <p class="status-text" style="text-align: center;"></p>
+      <div class="container main-container" style="display: none;">
+        <div class="section">     
+
+          <div class="row">
+            <div class="col s12">
+              <h6>Set Alarm</h6>
+              <div class="input-field col s6">
+                <i class="timepicker-icon material-icons prefix">access_alarm</i>
+                <input type="text" class="timepicker" value="--:-- --">
+              </div>
+              
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s12">
+              <!-- Switch -->
+              <h6>Lamp</h6>
+              <div class="switch">
+                <label>
+                  Off
+                  <input type="checkbox" >
+                  <span class="lever"></span>
+                  On
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </main>
+    
+    <!-- Footer -->    
+    <footer class="page-footer grey darken-4" style="padding-top: 0;">      
+      <div class="footer-copyright">
+        <div class="container">
+        Made by <a href="https://diyodemag.com">DIYODE Magazine</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal-prompt" class="modal">
+      <div class="modal-content">
+        <h4>Setup</h4>
+        <p>What is the URL of your device?</p>
+
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">public</i>
+            <input id="url" type="text" class="validate">
+          <label for="url">URL</label>
+          <span class="helper-text">Example: http://192.168.1.50</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Continue</a>
+      </div>
+    </div>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
