@@ -19,11 +19,11 @@
 ### 017
 * Change alarmset var to 0
 * add to alarm set function to change to 1
-* Add id's to alarms	
+* Add id's to alarms
 * Uncomment TM1637 Code
 * Remove test loop for light on
 * Remove set Alarm from the setup.
-* Added brightness to alarms 
+* Added brightness to alarms
 * Change delay from 10 to 5 seconds after the NTP server has been working
 
 ## 018

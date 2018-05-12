@@ -1,4 +1,4 @@
-//github V18
+//github V019. Code cleanup and hardware prep.
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
@@ -18,7 +18,6 @@ const char* ntpServerName = "time.nist.gov";
 const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
 byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
 WiFiUDP udp;
-
 
 //Neopixel Setup
 #include <Adafruit_NeoPixel.h>
