@@ -35,3 +35,12 @@
 ## Known Issues
 1. Alarms need to be set each time and are not reccuring. This is possible but the alrms need to be reset after each change.
 2. On "No Packet yet error" need to output to 7 seg "err"
+
+##Pin assignments
+Code=Markings on Wemos
+D8=D10 
+D7=D7
+D6=D6
+D5=D5
+D4=D9
+D3=D8

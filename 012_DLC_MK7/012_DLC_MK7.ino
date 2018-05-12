@@ -25,7 +25,7 @@ WiFiUDP udp;
 #include <avr/power.h>
 #endif
 // Which pin on the Arduino is connected to the NeoPixels?
-#define PIN            D6
+#define PIN            D3 //Pin D8 on the Wemos
 // How many NeoPixels are attached to the Arduino?
 #define NUMPIXELS      16 //8 if only useing one strip, 16 for 2
 #define BRIGHTNESS 255
@@ -34,8 +34,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 //Clock Setup
 #include "TM1637.h"
 //Pins for TM1637
-#define CLK 3//8
-#define DIO 4//was9
+#define CLK D7//8
+#define DIO D6//was9
 TM1637 tm1637(CLK, DIO);
 
 //RTC Setup
@@ -50,8 +50,8 @@ int decPoint = 0;
 #include <TimeAlarms.h>
 
 //Pins setup
-int resetButton = 12;
-int piezoPin = 10;
+int resetButton = D5;
+int piezoPin = D4;
 int buzzerOn = 0;
 
 //Chase function, used in partyMode
