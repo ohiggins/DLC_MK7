@@ -34,3 +34,4 @@
 
 ## Known Issues
 1. Alarms need to be set each time and are not reccuring. This is possible but the alrms need to be reset after each change.
+2. On "No Packet yet error" need to output to 7 seg "err"
