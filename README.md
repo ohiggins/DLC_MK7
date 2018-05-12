@@ -39,11 +39,11 @@
 1. Alarms need to be set each time and are not reoccuring. They should be considered a "single shot" This is possible but the alarms need to be reset after each change.
 2. On "No Packet yet error" need to output to 7 seg "err"
 
-##Pin assignments
-C++ Arduino Code=Markings on Wemos
-D8  = D10 piezoPin
-D7  = D7  Clk
-D6  = D6  DIO
-D5  = D5  Input button
-D4  = D9  Not Used
-D3  = D8  Neo Pixel
+## Pin assignments
+###C++ Arduino Code=Markings on Wemos
+* D8  = D10 piezoPin
+* D7  = D7  Clk
+* D6  = D6  DIO
+* D5  = D5  Input button
+* D4  = D9  Not Used
+* D3  = D8  Neo Pixel
