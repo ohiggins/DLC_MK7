@@ -51,7 +51,7 @@ int decPoint = 0;
 
 //Pins setup
 int resetButton = D5;
-int piezoPin = D4;
+int piezoPin = D8;
 int buzzerOn = 0;
 
 //Chase function, used in partyMode
@@ -168,6 +168,18 @@ void setClockDisplay() {
         tm1637.display(2, mm / 10); // minutes
         tm1637.display(3, mm % 10);
         delay(500);
+}
+void showIP(){
+//  IPAddress ip = WiFi.localIP();
+//  char buf[16];
+//  buf
+////sprintf(lcdBuffer, "%d.%d.%d.%d:%d", ip[0], ip[1], ip[2], ip[3], udpPort);
+//  Serial.println(WiFi.localIP());
+//        tm1637.display(0, hh / 10); // hour
+//        tm1637.display(1, hh % 10);
+//        tm1637.display(2, mm / 10); // minutes
+//        tm1637.display(3, mm % 10);
+//        delay(500);
 }
 unsigned long sendNTPpacket(IPAddress& address) {
         Serial.println("sending NTP packet...");
@@ -330,7 +342,7 @@ void setup() {
         //?6
         pixels.setBrightness(BRIGHTNESS);
         pixels.begin(); // This initializes the NeoPixel library.
-        //pinMode(piezoPin, OUTPUT);
+        pinMode(piezoPin, OUTPUT);
         tm1637.init();
         tm1637.set(5);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7;
         Serial.begin(115200);
@@ -387,7 +399,7 @@ void printDigits(int digits) {
         Serial.print(digits);
 }
 void loop() {
-
+digitalWrite(piezoPin, HIGH);
         hh = hour(), DEC;
         mm = minute(), DEC;
           if (buzzerOn == 1) {
@@ -399,12 +411,12 @@ void loop() {
             digitalWrite(piezoPin, LOW);
           }
           //Display Clock
-          //setClockDisplay();
+          setClockDisplay();
           //Alarm.delay(1);
           if (digitalRead(resetButton) == HIGH) {
             setBlue();
             digitalWrite(piezoPin, HIGH);
-            delay(100);
+            delay(500);
             buzzerOn = 0;
             lightOff();
           }
@@ -413,7 +425,7 @@ void loop() {
         Alarm.delay(1);
         server.handleClient();
         //comment uncomment if you need the clock displayed on the serial monitor
-        digitalClockDisplay();
-        delay(1000);
+        //digitalClockDisplay();
+        delay(100);
 
 }

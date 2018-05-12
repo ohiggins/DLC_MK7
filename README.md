@@ -38,9 +38,9 @@
 
 ##Pin assignments
 Code=Markings on Wemos
-D8=D10 
-D7=D7
-D6=D6
-D5=D5
+D8=D10 piezoPin 
+D7=D7 Clk
+D6=D6 DIO
+D5=D5 Input button
 D4=D9
-D3=D8
+D3=D8 Neo Pixel
