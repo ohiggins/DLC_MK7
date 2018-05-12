@@ -65,6 +65,7 @@ static void chase(uint32_t c) {
 }
 //Demo to test all the pixels are working. Will loop until the reset button is held down
 void partyMode() {
+  Serial.println("Party Mode Active");
         while (digitalRead(resetButton) == LOW) {
                 //set clock
                 //we're gunna party like it's;
@@ -77,10 +78,11 @@ void partyMode() {
                 chase(pixels.Color(0, 255, 0)); // Green
                 chase(pixels.Color(0, 0, 255)); // Blue
         }
+        Serial.println("Party is over");
 }
 void lightOn() {
         for (int i = 0; i < NUMPIXELS; i++) {
-                pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+                pixels.setPixelColor(i, pixels.Color(255, 255, 255));
                 //Serial.println(i);
                 pixels.show();
         }
@@ -368,7 +370,7 @@ void setup() {
         getTime();
 
         //party mode. enter test circuit. Once you have started, press the rest button to revert to noprmal mode
-        //partyMode();
+        partyMode();
 
 }
 void digitalClockDisplay() {
@@ -388,30 +390,30 @@ void loop() {
 
         hh = hour(), DEC;
         mm = minute(), DEC;
-        //  if (buzzerOn == 1) {
-        //    digitalWrite(piezoPin, HIGH);
-        //    delay(100);
-        //    digitalWrite(piezoPin, LOW);
-        //    //flash lights? This is where you add flash code or call a function to do so
-        //  } else{
-        //    digitalWrite(piezoPin, LOW);
-        //  }
-        //  //Display Clock
-        //  //setClockDisplay();
-        //  //Alarm.delay(1);
-        //  if (digitalRead(resetButton) == HIGH) {
-        //    setBlue();
-        //    digitalWrite(piezoPin, HIGH);
-        //    delay(100);
-        //    buzzerOn = 0;
-        //    lightOff();
-        //  }
+          if (buzzerOn == 1) {
+            digitalWrite(piezoPin, HIGH);
+            delay(100);
+            digitalWrite(piezoPin, LOW);
+            //flash lights? This is where you add flash code or call a function to do so
+          } else{
+            digitalWrite(piezoPin, LOW);
+          }
+          //Display Clock
+          //setClockDisplay();
+          //Alarm.delay(1);
+          if (digitalRead(resetButton) == HIGH) {
+            setBlue();
+            digitalWrite(piezoPin, HIGH);
+            delay(100);
+            buzzerOn = 0;
+            lightOff();
+          }
         //getTime();//ntp server
         //Serial.println(WiFi.localIP());
         Alarm.delay(1);
         server.handleClient();
         //comment uncomment if you need the clock displayed on the serial monitor
-        //digitalClockDisplay();
+        digitalClockDisplay();
         delay(1000);
 
 }
