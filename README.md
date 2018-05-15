@@ -36,8 +36,7 @@
 * Final Code
 
 ## Known Issues
-1. Alarms need to be set each time and are not reoccuring. They should be considered a "single shot" This is possible but the alarms need to be reset after each change.
-2. On "No Packet yet error" need to output to 7 seg "err"
+1. On "No Packet yet error" need to output to 7 seg "err"
 
 ## Pin assignments
 ###C++ Arduino Code=Markings on Wemos
